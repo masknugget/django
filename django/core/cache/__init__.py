@@ -16,7 +16,7 @@ from threading import local
 
 from django.conf import settings
 from django.core import signals
-from django.core.cache.backends.base import (
+from django.core.cache.backends.base import (                          # --- 一次性引入多个--- 
     BaseCache, CacheKeyWarning, InvalidCacheBackendError,
 )
 from django.utils.module_loading import import_string
