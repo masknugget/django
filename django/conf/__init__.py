@@ -21,7 +21,7 @@ from django.utils.deprecation import RemovedInDjango40Warning
 from django.utils.functional import LazyObject, empty
 
 ENVIRONMENT_VARIABLE = "DJANGO_SETTINGS_MODULE"
-
+                                                                                     # --- 这个是str ---
 PASSWORD_RESET_TIMEOUT_DAYS_DEPRECATED_MSG = (
     'The PASSWORD_RESET_TIMEOUT_DAYS setting is deprecated. Use '
     'PASSWORD_RESET_TIMEOUT instead.'
@@ -33,7 +33,7 @@ class SettingsReference(str):
     String subclass which references a current settings value. It's treated as
     the value in memory but serializes to a settings.NAME attribute reference.
     """
-    def __new__(self, value, setting_name):
+    def __new__(self, value, setting_name):                              # --- 这个是怎么回事 --- 
         return str.__new__(self, value)
 
     def __init__(self, value, setting_name):
@@ -52,10 +52,10 @@ class LazySettings(LazyObject):
         is used the first time settings are needed, if the user hasn't
         configured settings manually.
         """
-        settings_module = os.environ.get(ENVIRONMENT_VARIABLE)
+        settings_module = os.environ.get(ENVIRONMENT_VARIABLE)                         # _setup() 将环境等的要求进行封装
         if not settings_module:
             desc = ("setting %s" % name) if name else "settings"
-            raise ImproperlyConfigured(
+            raise ImproperlyConfigured(                                                # django的错误都裹了一层
                 "Requested %s, but settings are not configured. "
                 "You must either define the environment variable %s "
                 "or call settings.configure() before accessing settings."
@@ -63,7 +63,7 @@ class LazySettings(LazyObject):
 
         self._wrapped = Settings(settings_module)
 
-    def __repr__(self):
+    def __repr__(self):                                               # 了解这些repr,getattr,setattr, delattr很重要，对于完善的类也比较重要
         # Hardcode the class name as otherwise it yields 'Settings'.
         if self._wrapped is empty:
             return '<LazySettings [Unevaluated]>'
